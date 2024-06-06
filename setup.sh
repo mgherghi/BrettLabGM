@@ -29,20 +29,6 @@ storage_pools:
   name: default
   driver: dir
 profiles:
-- config:
-    environment.DISPLAY: :0
-    cloud-init.user-data: |
-      #cloud-config
-  description: GUI LXD profile
-  devices:
-    X0:
-      bind: container
-      connect: unix:@/tmp/.X11-unix/X10
-      listen: unix:@/tmp/.X11-unix/X0
-      security.gid: "1000"
-      security.uid: "1000"
-      type: proxy
-  name: gui
 - config: {}
   description: Default LXD profile
   devices:
@@ -61,20 +47,20 @@ profiles:
       network:
         version: 2
         ethernets:
-            enp0s3:
+            eth0:
                 dhcp4: true
-            enp0s8:
+            eth1:
                 dhcp4: false
                 addresses:
                     - 192.168.22.101/24
   description: Router LXD profile
   devices:
-    enp0s3:
-      name: enp0s3
+    eth0:
+      name: eth0
       network: lxdbr0
       type: nic
-    enp0s8:
-      name: enp0s8
+    eth1:
+      name: eth1
       network: rt
       type: nic
     root:
@@ -88,7 +74,7 @@ profiles:
       network:
         version: 2
         ethernets:
-            enp0s8:
+            eth0:
                 dhcp4: false
                 addresses:
                     - 192.168.22.102/24
@@ -97,18 +83,18 @@ profiles:
                       via: 192.168.22.101
                 nameservers:
                     addresses: [8.8.8.8,8.8.4.4]
-            enp0s9:
+            eth1:
                 dhcp4: false
                 addresses:
                     - 192.168.23.102/24 
   description: Testing LXD profile
   devices:
-    enp0s8:
-      name: enp0s8
+    eth0:
+      name: eth0
       network: rt
       type: nic
-    enp0s9:
-      name: enp0s9
+    eth1:
+      name: eth1
       network: tc
       type: nic
     root:
@@ -122,10 +108,7 @@ profiles:
       network:
           version: 2
           ethernets:
-              eth0:
-                  addresses:
-                      - 10.154.149.69/24
-              enp0s8:
+              eth0: 
                   dhcp4: false
                   addresses:
                       - 192.168.23.104/24
@@ -138,10 +121,6 @@ profiles:
   devices:
     eth0:
       name: eth0
-      network: lxdbr0
-      type: nic
-    enp0s8:
-      name: enp0s8
       network: tc
       type: nic
     root:
@@ -155,7 +134,7 @@ profiles:
       network:
           version: 2
           ethernets:
-              eth1:
+              eth0:
                   dhcp4: false
                   addresses:
                       - 192.168.23.103/24
@@ -166,8 +145,8 @@ profiles:
                       addresses: [8.8.8.8,8.8.4.4]
   description: Metasploitable LXD profile
   devices:
-    eth1:
-      name: eth1
+    eth0:
+      name: eth0
       network: tc
       type: nic
     root:
@@ -185,6 +164,7 @@ projects:
     features.storage.volumes: "true"
   description: Default LXD project
   name: default"
+
 
 
 echo "$configuration" | lxd init --preseed
