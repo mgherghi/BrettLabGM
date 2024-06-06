@@ -12,22 +12,19 @@ networks:
   type: bridge
   project: default
 - config:
-    ipv4.address: none
-    ipv6.address: none
+    ipv4.address: 192.168.22.1/24
   description: ""
   name: rt
   type: bridge
   project: default
 - config:
-    ipv4.address: none
-    ipv6.address: none
+    ipv4.address: 192.168.23.1/24
   description: ""
   name: tc
   type: bridge
   project: default
 storage_pools:
-- config:
-    source: /var/snap/lxd/common/lxd/storage-pools/default
+- config: {}
   description: ""
   name: default
   driver: dir
@@ -189,6 +186,7 @@ projects:
   description: Default LXD project
   name: default"
 
+
 echo "$configuration" | lxd init --preseed
 
 # just in case this gets changed somehow
@@ -197,9 +195,9 @@ lxc remote set-default local
 lxc remote add --protocol simplestreams ubuntu-minimal https://cloud-images.ubuntu.com/minimal/releases/
 
 # initialize the profiles to default for internet connection
-lxc init ubuntu-minimal:22.04 router --profile router
-lxc init ubuntu-minimal:22.04 testing --profile default
-lxc init ubuntu-minimal:22.04 metasploitable --profile default
+lxc init ubuntu-minimal:focal router --profile router
+lxc init ubuntu-minimal:focal testing --profile default
+lxc init ubuntu-minimal:focal metasploitable --profile default
 lxc start router
 lxc start testing
 lxc start metasploitable
@@ -227,7 +225,7 @@ lxc start testing
 lxc start metasploitable
 
 # client setup is special, since it requires GUI access
-lxc launch ubuntu-minimal:22.04 -p default -p gui client
+lxc launch ubuntu-minimal:focal client
 
 lxc exec client -- apt update
 
